@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
     $stmt->bind_result($cnt, $user_id, $pwd_hash);
     $stmt->fetch();
+    $stmt->close();
 
     //check that user exists and password is correct
     if ($cnt == 1 && password_verify($inputtedPassword, $pwd_hash)) {

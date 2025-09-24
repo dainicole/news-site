@@ -10,10 +10,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Request forgery detected");
     }
 
-$username = $_SESSION['username'];
+    //check login
+    if (!isset($_SESSION['username'])) {
+        echo "You must be logged in to add a comment.";
+        exit;
+    }
 
+$username = $_SESSION['username'];
 $text = $_POST['new_comment_text'];
-$story_id = $_POST['affiliated_story'];
+$story_id = $_POST['story_id'];
 
 // example query: insert into employees (story_id, username, comment_text) values ('5', 'alice', 'great idea!')
 $stmt = $mysqli->prepare("insert into comments (story_id, username, comment_text) values (?, ?, ?)");
@@ -23,11 +28,11 @@ if(!$stmt){
 }
 
 $stmt->bind_param('iss', $story_id, $username, $text);
-
 $stmt->execute();
-
 $stmt->close();
 
+header("Location: homepage.php");
+exit;
 }
 
 ?>
