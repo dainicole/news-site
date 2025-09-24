@@ -24,9 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_result($cnt, $user_id, $pwd_hash);
     $stmt->fetch();
 
-    //check that user exists and psasword is correct
+    //check that user exists and password is correct
     if ($cnt == 1 && password_verify($inputtedPassword, $pwd_hash)) {
         $_SESSION['user_id'] = $user_id;
+        $_SESSION['username'] = $username;
         header("Location: homepage.php");
         exit;
     } else {

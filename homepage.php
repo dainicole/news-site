@@ -48,7 +48,43 @@ while ($stmt->fetch()) {
                 echo "<p>Link: <a href='".htmlentities($story['link'])."'>".htmlentities($story['link'])."</a></p>";
             }
             echo "<p>Posted by: ".htmlentities($story['username'])."</p>";
+                // query to collect all comments with story titles
+                $stmt = $mysqli->prepare("
+                SELECT username, comment_text
+                FROM comments
+                WHERE story_id = ?
+                ORDER BY id DESC
+            ");
+            $stmt->bind_param("i", $story['story_id']);
+            $stmt->execute();
+            
+            $stmt->bind_result($comment_user, $comment_text);
+
+            echo "<h3>Comments:</h3>";
+            $hasComments = false;
+            while ($stmt->fetch()) {
+                $hasComments = true;
+                echo "<p>".htmlentities($comment_user).": ";
+                echo htmlentities($comment_text)."</p>";
+            }
+            if (!$hasComments) {
+                echo "<p>No comments yet.</p>";
+            }
+            echo '<form class="addCommentForm" action="createComment.php" method="POST">
+                    <p>
+                        <label for="addComment">Add a comment:</label>
+                        <input type="text" name="new_comment_text" required>
+                        <input type="hidden" name="token" value="'.htmlentities($_SESSION['token']).'" />                    </p>
+                    <button type="submit">Submit</button>
+                </form>';
         }
     ?>
+    <form class="addStoryForm" action="createStory.php" method="POST">
+        <p>
+            <label for="stext" id="storytext">Add a story:</label>
+            <input type="text" name="new_story_text" id="newStoryText" required>
+        </p>
+        <button type="submit">Submit</button>
+    </form>'
 </body>
 </html>
