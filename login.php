@@ -1,9 +1,20 @@
 <?php
 require 'database.php';
 
+//create CSRF token
+if (empty($_SESSION['token'])) {
+    $_SESSION['token'] = bin2hex(random_bytes(32));
+}
+
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    //check CSRF
+    if (!hash_equals($_SESSION['token'], $_POST['token'])) {
+        die("Request forgery detected");
+    }
+
     $username = $_POST['username'];
     $inputtedPassword = $_POST['password'];
 
@@ -47,5 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 
     <p>Don't have an account? <a href="register.php">Register here</a></p>
+    <p><a href="homepage.php">Back to stories</a></p>
 </body>
 </html>
