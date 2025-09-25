@@ -10,28 +10,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //check login
     if (!isset($_SESSION['username'])) {
-        echo "You must be logged in to add a story.";
+        echo "You must be logged in to edit a story.";
         exit;
     }
 
     $username = $_SESSION['username'];
-    $title = $_POST['story_title'];
+    $story_id = (int) $_POST['story_id'];
+    $author = $_POST['author'];
+    $title = $_POST['title'];
     $content = $_POST['content'];
-    $link = $_POST['link'];
+    $link = $_POST['link']; // TODO deal with if there's no link    
 
-    // TODO make this update instead of insert
-    //$stmt = $mysqli->prepare("insert into stories (username, title, content, link) values (?, ?, ?, ?)");
-    if(!$stmt){
-        printf("Query Prep Failed: %s\n", $mysqli->error);
-        exit;
+    // only edit if you're logged in as that user
+    if ($author == $username) {
+        // TODO make this an edit query     update employees set nickname='KJ' where id=2;
+        $stmt = $mysqli->prepare("update stories set title=?, content=?, link=? where id=(?)");
+        if(!$stmt){
+            printf("Query Prep Failed: %s\n", $mysqli->error);
+            exit;
+        }
+        $stmt->bind_param('sssi', $title, $content, $link, $story_id);
+        $stmt->execute();
+        $stmt->close();
     }
-
-    $stmt->bind_param('ssss', $username, $title, $content, $link);
-    $stmt->execute();
-    $stmt->close();
-
     header("Location: homepage.php");
     exit;
 }
-
 ?>

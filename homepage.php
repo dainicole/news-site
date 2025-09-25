@@ -58,14 +58,35 @@ while ($stmt->fetch()) {
                 echo "<p>Link: <a href='".htmlentities($story['link'])."'>".htmlentities($story['link'])."</a></p>";
             }
             echo "<p>Likes: ".htmlentities($story['likes'])."</p>";
-            echo '<form action="likeStory.php" method="POST" class="likeForm">
-                <p>
+            $user_liked = false;
+            if (isset($_SESSION['username'])) {
+                //check if user already liked the story
+                $check_like = $mysqli->prepare("SELECT COUNT(*) FROM likes WHERE story_id=? AND username=?");
+                $check_like->bind_param("is", $story['story_id'], $_SESSION['username']);
+                $check_like->execute();
+                $check_like->bind_result($like_count);
+                $check_like->fetch();
+                $check_like->close();
+
+                if ($like_count > 0) {
+                    $user_liked = true;
+                }
+            }
+            //show corresponding like or unlike button
+            if ($user_liked) {
+                echo '<form action="unlikeStory.php" method="POST">
                     <input type="hidden" name="story_id" value="'.$story['story_id'].'" />
-                    <input type="hidden" name="author" value="'.$story['username'].'" />
                     <input type="hidden" name="token" value="'.$_SESSION['token'].'" />
-                </p>
-                <button type="submit">Like</button>
-                    </form>';
+                    <button type="submit">Unlike</button>
+                </form>';
+            }
+            else {
+                echo '<form action="likeStory.php" method="POST">
+                    <input type="hidden" name="story_id" value="'.$story['story_id'].'" />
+                    <input type="hidden" name="token" value="'.$_SESSION['token'].'" />
+                    <button type="submit">Like</button>
+                </form>';
+            }
             echo "<p>Posted by: ".htmlentities($story['username'])."</p>";
             // if you're the poster, show edit/delete buttons for the story
                 if($story['username'] == $_SESSION['username']) {
@@ -91,8 +112,6 @@ while ($stmt->fetch()) {
                         <button type="submit">Delete</button>
                     </form>';
                 }
-
-
 
             //query to collect all comments that correspond to a given story
             $cstmt = $mysqli->prepare("
