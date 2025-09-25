@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //check login
     if (!isset($_SESSION['username'])) {
-        echo "You must be logged in to delete stories.";
+        echo "You must be logged in to edit stories.";
         exit;
     }
 
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $author = $_POST['author'];
     $title = $_POST['title'];
     $content = $_POST['content'];
-    $link = $_POST['link']; // TODO deal with if there's no link    
+    $link = $_POST['link'];
 }
 ?>
 
@@ -34,11 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form class="addStoryForm" action="editStorySubmit.php" method="POST">
         <p>
             <label for="storyTitle">Title:</label>
-            <input type="text" name="title" id="storyTitle" value=<?php echo htmlentities($title) ?> required>
+            <textarea name="title" id="storyTitle" rows="4" required><?php echo htmlentities($title) ?></textarea>
         </p>
         <p>
             <label for="storyContent">Content:</label>
-            <textarea name="content" id="storyContent" rows="4" required> <?php echo htmlentities($content) ?> </textarea>
+            <textarea name="content" id="storyContent" rows="4" required><?php echo htmlentities($content) ?></textarea>
         </p>
         <p>
             <label for="storyLink">Link (optional):</label>

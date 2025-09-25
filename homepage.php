@@ -40,24 +40,33 @@ while ($stmt->fetch()) {
 <head>
     <meta charset="UTF-8">
     <title>Simple News Site</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Breaking News</h1>
-    <?php
-        if (isset($_SESSION['username'])) {
-            echo "<p>Hi " . htmlentities($_SESSION['username']) . "!</p>";
-            echo '<p><a href="logout.php">Logout</a></p>';
-        } else {
-            echo '<p><a href="login.php">Login</a> to add a story or comment.</p>';
-        }
+    <div class="topbar">
+        <h1>Breaking News</h1>
+        <div class="user-section">
+            <?php
+            if (isset($_SESSION['username'])) {
+                echo "<span>Hi " . htmlentities($_SESSION['username']) . "!</span>";
+                echo '<a href="logout.php">Logout</a>';
+            } else {
+                echo '<a href="login.php">Login</a> to add a story or comment.';
+            }
+            ?>
+        </div>
+    </div>
+
+        <?php
         //display stories collected from query
         foreach ($allStories as $story) {
+            echo '<div class="storyBox">';
             echo "<h2>".htmlentities($story['title']) . "</h2>";
             echo "<p>".htmlentities($story['content'])."</p>";
             if (!empty($story['link'])) {
                 echo "<p>Link: <a href='".htmlentities($story['link'])."'>".htmlentities($story['link'])."</a></p>";
             }
-            echo "<p>Likes: ".htmlentities($story['likes'])."</p>";
+            echo "<p>Likes: ".htmlentities($story['likes'])."❤️</p>";
             $user_liked = false;
             if (isset($_SESSION['username'])) {
                 //check if user already liked the story
@@ -75,44 +84,45 @@ while ($stmt->fetch()) {
             //show corresponding like or unlike button
             if ($user_liked) {
                 echo '<form action="unlikeStory.php" method="POST">
-                    <input type="hidden" name="story_id" value="'.$story['story_id'].'" />
-                    <input type="hidden" name="token" value="'.$_SESSION['token'].'" />
+                    <input type="hidden" name="story_id" value="'.$story['story_id'].'" >
+                    <input type="hidden" name="token" value="'.$_SESSION['token'].'" >
                     <button type="submit">Unlike</button>
                 </form>';
             }
             else {
                 echo '<form action="likeStory.php" method="POST">
-                    <input type="hidden" name="story_id" value="'.$story['story_id'].'" />
-                    <input type="hidden" name="token" value="'.$_SESSION['token'].'" />
+                    <input type="hidden" name="story_id" value="'.$story['story_id'].'" >
+                    <input type="hidden" name="token" value="'.$_SESSION['token'].'" >
                     <button type="submit">Like</button>
                 </form>';
             }
             echo "<p>Posted by: ".htmlentities($story['username'])."</p>";
             // if you're the poster, show edit/delete buttons for the story
+            if (isset($_SESSION['username'])) {
                 if($story['username'] == $_SESSION['username']) {
                     // edit button
                     echo '<form action="editStoryPage.php" method="POST" class="editForm">
                         <p>
-                            <input type="hidden" name="story_id" value="'.$story['story_id'].'" />
-                            <input type="hidden" name="author" value="'.$story['username'].'" />
-                            <input type="hidden" name="title" value="'.$story['title'].'" />
-                            <input type="hidden" name="content" value="'.$story['content'].'" />
-                            <input type="hidden" name="link" value="'.$story['link'].'" />
-                            <input type="hidden" name="token" value="'.$_SESSION['token'].'" />
+                            <input type="hidden" name="story_id" value="'.$story['story_id'].'" >
+                            <input type="hidden" name="author" value="'.$story['username'].'" >
+                            <input type="hidden" name="title" value="'.htmlentities($story['title']).'" >
+                            <input type="hidden" name="content" value="'.htmlentities($story['content']).'" >
+                            <input type="hidden" name="link" value="'.$story['link'].'" >
+                            <input type="hidden" name="token" value="'.$_SESSION['token'].'" >
                         </p>
                         <button type="submit">Edit</button>
                     </form>';
                     // delete button
                     echo '<form action="deleteStory.php" method="POST" class="deleteForm">
                         <p>
-                            <input type="hidden" name="story_id" value="'.$story['story_id'].'" />
-                            <input type="hidden" name="author" value="'.$story['username'].'" />
-                            <input type="hidden" name="token" value="'.$_SESSION['token'].'" />
+                            <input type="hidden" name="story_id" value="'.$story['story_id'].'" >
+                            <input type="hidden" name="author" value="'.$story['username'].'" >
+                            <input type="hidden" name="token" value="'.$_SESSION['token'].'" >
                         </p>
                         <button type="submit">Delete</button>
                     </form>';
                 }
-
+            }
             //query to collect all comments that correspond to a given story
             $cstmt = $mysqli->prepare("
             SELECT username, comment_text, id
@@ -132,27 +142,31 @@ while ($stmt->fetch()) {
                 echo htmlentities($comment_text)."</p>";
 
                 // if you're the poster, show edit/delete buttons for the comment
-                if($comment_user == $_SESSION['username']) {
-                    // edit button
-                    echo '<form action="editComment.php" method="POST" class="editForm">
-                        <p>
-                            <input type="hidden" name="comment_id" value="'.$comment_id.'" />
-                            <input type="hidden" name="author" value="'.$comment_user.'" />
-                            <input type="hidden" name="token" value="'.$_SESSION['token'].'" />
-                        </p>
-                        <button type="submit">Edit</button>
-                    </form>';
-                    // delete button
-                    echo '<form action="deleteComment.php" method="POST" class="deleteForm">
-                        <p>
-                            <input type="hidden" name="comment_id" value="'.$comment_id.'" />
-                            <input type="hidden" name="author" value="'.$comment_user.'" />
-                            <input type="hidden" name="token" value="'.$_SESSION['token'].'" />
-                        </p>
-                        <button type="submit">Delete</button>
-                    </form>';
+                if (isset($_SESSION['username'])) {
+                    if($comment_user == $_SESSION['username']) {
+                        // edit button
+                        echo '<form action="editCommentPage.php" method="POST" class="editForm">
+                            <p>
+                                <input type="hidden" name="comment_id" value="'.$comment_id.'" >
+                                <input type="hidden" name="author" value="'.$comment_user.'" >
+                                <input type="hidden" name="content" value="'.htmlentities($comment_text).'" >
+                                <input type="hidden" name="token" value="'.$_SESSION['token'].'" >
+                            </p>
+                            <button type="submit">Edit</button>
+                        </form>';
+                        // delete button
+                        echo '<form action="deleteComment.php" method="POST" class="deleteForm">
+                            <p>
+                                <input type="hidden" name="comment_id" value="'.$comment_id.'" >
+                                <input type="hidden" name="author" value="'.$comment_user.'" >
+                                <input type="hidden" name="token" value="'.$_SESSION['token'].'" >
+                            </p>
+                            <button type="submit">Delete</button>
+                        </form>';
+                    }
                 }
             }
+            
             $cstmt->close();
             if (!$hasComments) {
                 echo "<p>No comments yet.</p>";
@@ -161,29 +175,32 @@ while ($stmt->fetch()) {
                 <p>
                     <label for="addComment'.$story['story_id'].'">Add a comment:</label>
                     <input type="text" id="addComment'.$story['story_id'].'" name="new_comment_text" required>
-                    <input type="hidden" name="story_id" value="'.$story['story_id'].'" />
-                    <input type="hidden" name="token" value="'.$_SESSION['token'].'" />
+                    <input type="hidden" name="story_id" value="'.$story['story_id'].'" >
+                    <input type="hidden" name="token" value="'.$_SESSION['token'].'" >
                 </p>
                 <button type="submit">Submit</button>
             </form>';
+             echo '</div>';
         }
     ?>
+    <div id="addStory">
     <h3>Add a Story:</h3>
     <form class="addStoryForm" action="createStory.php" method="POST">
         <p>
-            <label for="newStoryTitle">Title:</label>
+            <label for="newStoryTitle">Title:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
             <input type="text" name="story_title" id="newStoryTitle" required>
         </p>
         <p>
-            <label for="newStoryContent">Content:</label>
+            <label for="newStoryContent">Content:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
             <textarea name="content" id="newStoryContent" rows="4" required></textarea>
         </p>
         <p>
             <label for="newStoryLink">Link (optional):</label>
             <input type="text" name="link" id="newStoryLink">
         </p>
-        <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>" />
+        <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>" >
         <button type="submit">Submit</button>
     </form>
+    </div>
 </body>
 </html>

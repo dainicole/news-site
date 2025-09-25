@@ -1,0 +1,110 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica", sans-serif;
+}
+
+:root {
+    --background-gray: #dbdbdb;
+}
+
+body {
+    background-color: var(--background-gray);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 100px;
+}
+
+.topbar {
+    position: fixed;
+    padding: 10px 20px 15px 20px!important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #111;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    flex-wrap: wrap;
+}
+
+.topbar h1 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.topbar .user-section {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.topbar .user-section a {
+    color: #5499f3;
+}
+
+.storyBox {
+    background-color: white;
+    border: 1px solid darkgray;
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    width: 900px;
+    max-width: 95%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-wrap: break-word;
+}
+
+button {
+    background-color: #5499f3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #4786d8;
+}
+
+.addCommentForm input {
+    width: 80%;
+    padding: 0.4rem;
+    margin-right: 0.5rem;
+}
+
+
+#addStory {
+    background-color: white;
+    border: 1px solid darkgray;
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    width: 900px;
+    max-width: 95%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-wrap: break-word;
+}
+
+.addStoryForm input {
+    width: 80%;
+    padding: 0.4rem;
+    margin:1rem;
+}
+
+.addStoryForm textarea {
+    width: 80%;
+    padding: 0.4rem;
+    box-sizing: border-box;
+}

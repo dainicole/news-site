@@ -15,21 +15,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $username = $_SESSION['username'];
-    $story_id = (int) $_POST['story_id'];
+    $comment_id = (int)$_POST['comment_id'];
     $author = $_POST['author'];
-    $title = $_POST['title'];
     $content = $_POST['content'];
-    $link = $_POST['link'];  
 
     // only edit if you're logged in as that user
     if ($author == $username) {
-        // update employees set nickname='KJ' where id=2;
-        $stmt = $mysqli->prepare("update stories set title=?, content=?, link=? where id=(?)");
+        $stmt = $mysqli->prepare("update comments set comment_text=? where id=(?)");
         if(!$stmt){
             printf("Query Prep Failed: %s\n", $mysqli->error);
             exit;
         }
-        $stmt->bind_param('sssi', $title, $content, $link, $story_id);
+        $stmt->bind_param('si', $content, $comment_id);
         $stmt->execute();
         $stmt->close();
     }
