@@ -1,8 +1,6 @@
 <?php
 require 'database.php';
 
-//print_r($_SESSION);
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //check CSRF
@@ -12,22 +10,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //check login
     if (!isset($_SESSION['username'])) {
-        echo "You must be logged in to add a comment.";
+        echo "You must be logged in to add a story.";
         exit;
     }
 
     $username = $_SESSION['username'];
-    $text = $_POST['new_comment_text'];
-    $story_id = $_POST['story_id'];
+    $title = $_POST['story_title'];
+    $content = $_POST['content'];
+    $link = $_POST['link'];
 
-    // example query: insert into employees (story_id, username, comment_text) values ('5', 'alice', 'great idea!')
-    $stmt = $mysqli->prepare("insert into comments (story_id, username, comment_text) values (?, ?, ?)");
+    // TODO make this update instead of insert
+    //$stmt = $mysqli->prepare("insert into stories (username, title, content, link) values (?, ?, ?, ?)");
     if(!$stmt){
         printf("Query Prep Failed: %s\n", $mysqli->error);
         exit;
     }
 
-    $stmt->bind_param('iss', $story_id, $username, $text);
+    $stmt->bind_param('ssss', $username, $title, $content, $link);
     $stmt->execute();
     $stmt->close();
 
