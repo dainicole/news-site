@@ -3,6 +3,9 @@
 Nicole Dai 522011 dainicole
 Ayla Burba 517938 a-burba
 
+Homepage Link: http://ec2-3-22-63-225.us-east-2.compute.amazonaws.com/~Nicole/module3-group-module3-522011-517938/homepage.php
+<br>
+Creative Portion: We implemented a liking system where a signed in user can like stories (similar to instagram). A user can like and unlike any story including their own (if they wanted). However, they cannot like the same story more than one time. To do this, we created a table specifically for likes. It stores columns including id, story_id, and username in order to keep track of which users liked which story. In our code, we would run a query that would check if a user has already linked to a story idea. If that count was 0, then we could send another query to insert a new entry (meaning that a user liked a story). Conversely, if the count is greater than 0, then we can confirm that there is a story a user can unlike.
 
 
 
