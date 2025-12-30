@@ -1,4 +1,4 @@
-# CSE3300
+# CSE3300 - News Web Site
 Nicole Dai & Ayla Burba
 
 Homepage Link: http://ec2-3-22-63-225.us-east-2.compute.amazonaws.com/~Nicole/module3-group-module3-522011-517938/homepage.php
