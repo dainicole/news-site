@@ -1,7 +1,5 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/uYH-8BSY)
 # CSE3300
-Nicole Dai 522011 dainicole
-Ayla Burba 517938 a-burba
+Nicole Dai & Ayla Burba
 
 Homepage Link: http://ec2-3-22-63-225.us-east-2.compute.amazonaws.com/~Nicole/module3-group-module3-522011-517938/homepage.php
 <br>
